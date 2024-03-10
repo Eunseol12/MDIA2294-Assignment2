@@ -28,7 +28,7 @@
                     <div><img id="main-image" alt="Main Image" /></div>
 
                     <!-- you may or may not use this hidden textbox-->
-                    <div><input id="current-index" /></div>    
+                    <div><input id="current-index" style="display: none;"/></div>    
                 </td>
 	            <td></td>
 	        
@@ -43,7 +43,7 @@
 	            </td>
 	            <td>
 	                <img src="images/next.png" id="next-btn" />            
-	                <img src="images/last.png" id="prev-btn" />
+	                <img src="images/last.png" id="last-btn" />
 	            </td>
 	        </tr>	    
 	    </table>       
@@ -51,56 +51,94 @@
     
 	<script>
 
+		const imageArray = [
+			"cat/laser.png",
+			"cat/no_bother_me.png",
+			"cat/pikaboo.png",
+			"cat/pose.png",
+			"cat/sleepy.png",
+			"cat/weirdo.png",
+			"cat/what_human.png",
+			"cat/yawn_like_a_monster.png"
+		];
+
+
 		const first_load = () => { 
-			// TODO: set the main image to the first image in the array (index 0)
-			// TODO: set the thumbnail images		
+			set_main_image(0);
+			set_thumbnails();		
 		}
 	
 		const set_main_image = (index) => {
-			// TODO: set the main-image src image based on the passed parameter	    
-	
-			// TODO: set the hidden textbox to the current index (if you take this approach)	    
-	
-			// update the thumbnails based on the current selection
+			document.getElementById('main-image').src = imageArray[index];    
+			document.getElementById('current-index').value = index;
 			update_thumbnails(index);
 		}
 	
 		const set_thumbnails = () => {
-			// TODO: declare a variable for the thumbnail strip html (optional)
+			let thumbnailHTML = '';
+			for (let i = 0;i < imageArray.length; i++) {
+		
+				thumbnailHTML += '<img src="' + imageArray[i] + '" class="clickable-thumbnail" onclick="set_main_image(' + i + ')" width=80 />' ;
+			}
 	
-			// TODO: loop through the global array and build the html
-			//       - add an onclick handler to each thumbnail to call set_main_image(index)
-	
-			// TODO: add the html to the divThumbArea
+			document.getElementById('thumbnail-area').innerHTML = thumbnailHTML;
 	
 		} 
 	
 		const update_thumbnails = (current_index) => {
-			// TODO: you'll need to loop through all thumbnails
-			//		- turn on an indicator (eg opacity:1.0) if it's the selected thumb
-			//		- turn off the indicator (eg opacity:0.75) if it's not
+		
+			const thumbnails = document.querySelectorAll('.clickable');
+			thumbnails.forEach((thumbnail, index) => {
+				if (index === current_index)  {
+					thumbnail.style.opacity = 1.0;
+				} else {
+					thumbnail.style.opacity = 0.2;
+				}
+
+			});
 		} 
+
 	
 		const set_nav_first = () => {
-			// TODO: navigate to the first image (this is the easy one since it's always index zero)
-			
+			set_main_image(0);
 		}
-	
+
 		const set_nav_last = () => {
-			// TODO: navigate to the last image (should work for any size array)
+			set_main_image(imageArray.length - 1);
 		}
 	
 		const set_nav_next = () => {
-			// TODO: move to the next image, unless at the end in which case show the first image
-			
+			const current_index = Number(document.getElementById('current-index').value);
+			if (current_index < imageArray.length - 1) {
+				set_main_image(current_index + 1);
+			} else {
+				set_main_image(0);
+			}
 		}
 	
 		const set_nav_prev = () => {
-			// TODO: move to the previous image, unless at the end in which case show the last image
+			const current_index = Number(document.getElementById('current-index').value);
+			if (current_index > 0) {
+				set_main_image (current_index - 1);
+			} else {
+				set_main_image(imageArray.length -1);
+			}
 		}	
 
 		window.addEventListener("load", first_load);
 
+		//button
+		let first_btn = document.getElementById('first-btn');
+		first_btn.addEventListener('click',set_nav_first);
+
+		let prev_btn = document.getElementById('prev-btn');
+		prev_btn.addEventListener('click',set_nav_prev);
+
+		let next_btn = document.getElementById('next-btn');
+		next_btn.addEventListener('click',set_nav_next);
+
+		let last_btn = document.getElementById('last-btn');
+		last_btn.addEventListener('click',set_nav_last);
 	</script>
 	
 </body>
