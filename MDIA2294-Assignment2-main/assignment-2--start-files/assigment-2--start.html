@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>MDIA 2294</title>
+	
+	<style>	    
+	    img {
+	        margin:5px;
+	    }
+	    
+	    img.clickable{
+	        cursor:pointer;
+	    }
+	
+	</style>
+	
+</head>
+<body>
+
+	<h1>MDIA 2294: Assignment 2</h1>
+	
+	<div style="text-align:center;">
+	    <table>
+	        <tr>
+	            <td></td>
+	            <td style="text-align:center;">
+                    <div><img id="main-image" alt="Main Image" /></div>
+
+                    <!-- you may or may not use this hidden textbox-->
+                    <div><input id="current-index" style="display: none;"/></div>    
+                </td>
+	            <td></td>
+	        
+	        </tr>
+	        <tr>
+	            <td>
+	                <img src="images/first.png" id="first-btn" />            
+	                <img src="images/prev.png" id="prev-btn" />
+	            </td>
+	            <td>
+	                <div id="thumbnail-area"></div>	        
+	            </td>
+	            <td>
+	                <img src="images/next.png" id="next-btn" />            
+	                <img src="images/last.png" id="last-btn" />
+	            </td>
+	        </tr>	    
+	    </table>       
+	</div>
+    
+	<script>
+		// Make array for images
+		const imageArray = [
+			"cat/laser.png",
+			"cat/no_bother_me.png",
+			"cat/pikaboo.png",
+			"cat/pose.png",
+			"cat/sleepy.png",
+			"cat/weirdo.png",
+			"cat/what_human.png",
+			"cat/yawn_like_a_monster.png"
+		];
+
+		// set the initial main image by calling set_main_imgae(0) and generate the thumbnail image by set_thumbnails ()
+		const first_load = () => { 
+			set_main_image(0);
+			set_thumbnails();		
+		}
+	
+
+		//Take a parameter called index and set the main image to the image corresponding to that index.
+		const set_main_image = (index) => {
+			document.getElementById('main-image').src = imageArray[index];
+			//document.getElementById ('main-image').src sets the main image by changing the src properties of elements with main-image IDs in HTML.    
+			document.getElementById('current-index').value = index;
+			//document.getElementById('current-index').value) changes the value of a hidden text field with a current-index ID in HTML to save the current index.
+			update_thumbnails(index);
+			//Update the thumbnail by calling the update_thumbnails(index) function.
+		}
+	
+	
+		const set_thumbnails = () => {
+			let thumbnailHTML = '';
+			//Initializes an empty string called thumbnailHTML, which will later contain each thumbnail tag.
+			for (let i = 0;i < imageArray.length; i++) {
+				//leti = 0: Initializes the iterative variable i to 0 in the initialization phase.
+				//i < imageArray.length: In the Condition step, verify that i is less than the length of the imageArray, if true, continue.
+				//i++: Increase i by 1 at the end of each iteration.
+				thumbnailHTML += '<img src="' + imageArray[i] + '" class="clickable-thumbnail" onclick="set_main_image(' + i + ')" width=80 />' ;
+				//Thumbnail: In each iteration, add a new thumbnail image tag to the thumbnailHTML string. The path to the image is designated imageArray[i], and the on-click property is set to invoke the set_main_image(i) function when clicked.
+			}
+		
+	
+			document.getElementById('thumbnail-area').innerHTML = thumbnailHTML;
+			//After the iteration is complete, set the generated thumbnail HTML to the internal HTML of an HTML element with the ID thumbnail-area.
+		} 
+	
+		const update_thumbnails = (current_index) => {
+		
+			const thumbnails = document.querySelectorAll('.clickable');
+			thumbnails.forEach((thumbnail, index) => {
+				if (index === current_index)  {
+					thumbnail.style.opacity = 1.0;
+				} else {
+					thumbnail.style.opacity = 0;
+				}
+
+			});
+		} 
+
+	
+		const set_nav_first = () => {
+			set_main_image(0);
+		}
+
+		const set_nav_last = () => {
+			set_main_image(imageArray.length - 1);
+		}
+	
+		const set_nav_next = () => {
+			const current_index = Number(document.getElementById('current-index').value);
+			if (current_index < imageArray.length - 1) {
+				set_main_image(current_index + 1);
+			} else {
+				set_main_image(0);
+			}
+		}
+	
+		const set_nav_prev = () => {
+			const current_index = Number(document.getElementById('current-index').value);
+			if (current_index > 0) {
+				set_main_image (current_index - 1);
+			} else {
+				set_main_image(imageArray.length -1);
+			}
+		}	
+
+		window.addEventListener("load", first_load);
+
+		//button
+		let first_btn = document.getElementById('first-btn');
+		first_btn.addEventListener('click',set_nav_first);
+
+		let prev_btn = document.getElementById('prev-btn');
+		prev_btn.addEventListener('click',set_nav_prev);
+
+		let next_btn = document.getElementById('next-btn');
+		next_btn.addEventListener('click',set_nav_next);
+
+		let last_btn = document.getElementById('last-btn');
+		last_btn.addEventListener('click',set_nav_last);
+	</script>
+	
+</body>
+</html>
